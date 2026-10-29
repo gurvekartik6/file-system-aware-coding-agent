@@ -1,0 +1,8 @@
+#part 1
+pytest>=8.0,<10.0
+
+#part2
+langchain
+langchain-google-genai
+python-dotenv
+pytest

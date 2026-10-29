@@ -3,3 +3,8 @@ venv
 .env
 pycache
 _pycache
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+*.py[cod]
