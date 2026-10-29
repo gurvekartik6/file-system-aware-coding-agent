@@ -6,3 +6,7 @@ langchain
 langchain-google-genai
 python-dotenv
 pytest
+
+#part3
+langgraph
+langgraph-checkpoint
