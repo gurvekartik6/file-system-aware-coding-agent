@@ -10,3 +10,15 @@ pytest
 #part3
 langgraph
 langgraph-checkpoint
+langgraph-checkpoint-postgres
+psycopg[binary,pool]
+SQLAlchemy
+langgraph-checkpoint-postgres
+
+#part4
+sqlalchemy
+psycopg[binary,pool]
+alembic
+
+#part5
+streamlit

@@ -143,7 +143,7 @@ def _apply_approved_change(
 
     # Save a backup before replacing existing content.
     backup_relative_path = None
-    current_content = ""
+    current_content = old_content
 
     if now_exists:
         backup_dir = filesystem.root / ".agent_backups"
@@ -199,7 +199,9 @@ def _apply_approved_change(
         "status": "success",
         "operation": operation,
         "relative_path": relative_path,
-        "backup": backup_relative_path,
+        "original_sha256": original_hash,
+        "proposed_sha256": proposed_hash,
+        "backup_relative_path": backup_relative_path,
         "message": "Approved change applied successfully.",
     })
 

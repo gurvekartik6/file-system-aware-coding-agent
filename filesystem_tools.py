@@ -1,3 +1,5 @@
+import os
+import tempfile
 from pathlib import Path
 import re
 
@@ -136,13 +138,35 @@ class FilesystemTools:
                 f"Parent directory does not exist: {path.parent}"
             )
 
-        # Exclusive creation prevents accidentally replacing an existing
-        # file when overwrite=False.
-        if overwrite:
-            path.write_text(content, encoding="utf-8")
-        else:
-            with path.open("x", encoding="utf-8", newline="") as file:
-                file.write(content)
+        # Write through a sibling temporary file and replace atomically. The
+        # final replacement does not follow a symlink at the target path.
+        encoded = content.encode("utf-8")
+        temp_path: Path | None = None
+
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="wb",
+                dir=path.parent,
+                prefix=f".{path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as file:
+                file.write(encoded)
+                file.flush()
+                os.fsync(file.fileno())
+                temp_path = Path(file.name)
+
+            if not overwrite and path.exists():
+                raise FileExistsError(
+                    f"{relative_path} already exists. "
+                    "Use overwrite=True to replace it."
+                )
+
+            os.replace(temp_path, path)
+            temp_path = None
+        finally:
+            if temp_path is not None:
+                temp_path.unlink(missing_ok=True)
 
         return f"Successfully wrote {relative_path}"
 

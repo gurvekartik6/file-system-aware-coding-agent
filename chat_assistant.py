@@ -13,6 +13,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from filesystem_tools import FilesystemTools
 from tools.langchain_tools import create_filesystem_tools
+from model_config import sampling_kwargs
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -65,9 +66,9 @@ def create_model():
     return ChatGoogleGenerativeAI(
         model=model_name,
         google_api_key=api_key,
-        temperature=0,
         max_retries=2,
         timeout=60,
+        **sampling_kwargs(),
     )
 
 
